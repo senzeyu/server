@@ -12,7 +12,7 @@ import javax.mail.internet.MimeMessage;
 
 
 public class SendEmail {
-    public void send(String email_address) {
+    public void send(String serial_ID, String seg_ID, char op_code) {
         final String username = "safetpill477@gmail.com";
         final String password = "Zxczxc123!";
 
@@ -28,7 +28,10 @@ public class SendEmail {
                         return new PasswordAuthentication(username, password);
                     }
                 });
-
+        getEmail mail = new getEmail();
+        String email_address = mail.get(serial_ID);
+        getPillname pill = new getPillname();
+        String pillName = pill.get(serial_ID,seg_ID);
         try {
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(username));

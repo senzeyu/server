@@ -5,14 +5,10 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-//jdbc
 
 public class Server {
     public static void main(String[] args) throws IOException {
-  //     SendEmail sender = new SendEmail();
-//       sender.send("senzeyuzhang@gmail.com");
-        JDBC opreation1 = new JDBC();
-        opreation1.selectfromDB("1");
+        String serial_ID = "123";
         ServerSocket listener = new ServerSocket(9090);
         try{
             while(true){
@@ -23,27 +19,31 @@ public class Server {
                     BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                     String request = in.readLine();
                     System.out.println("Client request: " + request);
-                    SendEmail sender2 = new SendEmail();
-                    if (request.charAt(1)=='t'){
-                        sender2.send("senzeyuzhang@gmail.com");
-                        System.out.println("Sending take email...");
+
+                    if (request.charAt(1)=='t'){/*
+                        SendEmail sender = new SendEmail();
+                        sender.send("senzeyuzhang@gmail.com",'t');
+                        System.out.println("Sending take email...");*/
+                        getEmail mail = new getEmail();
+                        String email_address = mail.get(serial_ID);
+                        BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+                        System.out.println("Sending Message to Client...");
+                        out.write("5\n");
+                        out.flush();
                     }
-                    else if(request.charAt(1)=='f'){
-                        sender2.send("senzeyuzhang@gmail.com");
-                        System.out.println("Sending fill email...");
+                    else if(request.charAt(1)=='f'){/*
+                        SendEmail sender = new SendEmail();
+                        sender.send("senzeyuzhang@gmail.com",'f');
+                        System.out.println("Sending take email...");*/
+                        BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+                        System.out.println("Sending Message to Client...");
+                        out.write("3\n");
+                        out.flush();
                     }
-                    /*
-                    else request information {
-                        send dosage information select from mysql;
+                    else if (request.charAt(1) == 'u') {
+                        getDosageInfo dosage = new getDosageInfo();
+                        String dosageInfo = dosage.getInfo(serial_ID);
                     }
-                    else{
-                        do nothing;
-                    }
-                     */
-                    BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-                    System.out.println("Sending Message...");
-                    out.write("Hello from Java!\n");
-                    out.flush();
                 } finally {
                     socket.close();
                 }
