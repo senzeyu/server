@@ -2,11 +2,18 @@ import java.sql.*;
 
 public class getDosageInfo {
     // JDBC driver name and database URL
+    /*
     static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
     static final String url = "jdbc:mysql://localhost:3306/";
-    //  Database credentials
+    // Database credentials
     static final String username = "root";
     static final String password = "118129Zszy!";
+    */
+    static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
+    static final String url = "jdbc:mysql://sql9.freemysqlhosting.net:3306/sql9281675";
+    //  Database credentials
+    static final String username = "sql9281675";
+    static final String password = "CrxlPUYT21";
 
     public static String getInfo(String ID) {
         String info = "";
@@ -18,11 +25,11 @@ public class getDosageInfo {
             System.out.println("Successfully connected");
             System.out.println("Selecting");
             for (int i = 1; i <= 10; i++) {
-                info += "box";
+               // info += "box";
                 String index = Integer.toString(i);
-                info += index;
+               // info += index;
                 try {
-                    String query = "SELECT PillName" + index + //get pill name
+                    /*String query = "SELECT PillName" + index + //get pill name
                             " FROM SafeTpill.box" + ID + ";";
                     stmt = conn.createStatement();
                     ResultSet result = stmt.executeQuery(query);
@@ -32,29 +39,31 @@ public class getDosageInfo {
                             info += pillname;
                             info += "pillname";
                         }
-                    }
-                    query = "SELECT time" + index + //get number of pills to take
+                    }*/
+                    info += "p"; info += index;
+
+                    String query = "SELECT time" + index + //get number of pills to take
                             ", dos" + index + //get time to take the pill
-                            " FROM SafeTpill.box" + ID + ";";
+                            " FROM sql9281675.box" + ID + ";";
                     stmt = conn.createStatement();
-                    result = stmt.executeQuery(query);
+                    ResultSet result = stmt.executeQuery(query);
                     while (result.next()) {
                         String time = result.getString("time" + index);
                         //System.out.println("time: " + time);
                         if (time != null) {
+                            info += "t";
                             info += time;
-                            info += "time";
                         }
                         String dos = result.getString("dos" + index);
                         // System.out.println("dos: " + dos);
                         if (dos != null) {
+                            info += "n";
                             info += dos;
-                            info += "number";
                         }
                     }
                     //info = result.getString("Email");
-                    System.out.println(result);
-                    System.out.println("selected");
+                    //System.out.println(result);
+                    //System.out.println("selected");
                 } catch (SQLException e) {
                     e.printStackTrace();
                 } finally {
