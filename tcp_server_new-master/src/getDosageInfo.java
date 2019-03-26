@@ -24,23 +24,12 @@ public class getDosageInfo {
             conn = DriverManager.getConnection(url, username, password);
             System.out.println("Successfully connected");
             System.out.println("Selecting");
-            for (int i = 1; i <= 10; i++) {
+            for (int i = 1; i <= 10; i++) {//如果存的不到10个，怎么处理？
                // info += "box";
                 String index = Integer.toString(i);
                // info += index;
                 try {
-                    /*String query = "SELECT PillName" + index + //get pill name
-                            " FROM SafeTpill.box" + ID + ";";
-                    stmt = conn.createStatement();
-                    ResultSet result = stmt.executeQuery(query);
-                    while (result.next()) {
-                        String pillname = result.getString("PillName" + index);
-                        if (pillname != null) {
-                            info += pillname;
-                            info += "pillname";
-                        }
-                    }*/
-                    info += "p"; info += index;
+                    info += "p"; info += Integer.toString(i-1);
 
                     String query = "SELECT time" + index + //get number of pills to take
                             ", dos" + index + //get time to take the pill
@@ -61,9 +50,27 @@ public class getDosageInfo {
                             info += dos;
                         }
                     }
-                    //info = result.getString("Email");
-                    //System.out.println(result);
-                    //System.out.println("selected");
+                    /*
+                    bool empty_flag = true;
+                    while (result.next()) {
+                        String time = result.getString("time" + index);
+                        //System.out.println("time: " + time);
+                        if (time != null) {
+                            if(empty_flag = true){
+                                info += "p"; info +=  Integer.toString(i-1):
+                                empty_flag = false;
+                            }
+                            info += "t";
+                            info += time;
+                        }
+                        String dos = result.getString("dos" + index);
+                        // System.out.println("dos: " + dos);
+                        if (dos != null) {
+                            info += "n";
+                            info += dos;
+                        }
+                    }
+                     */
                 } catch (SQLException e) {
                     e.printStackTrace();
                 } finally {
