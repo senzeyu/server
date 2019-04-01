@@ -19,12 +19,19 @@ public class Server {
 
         //send email test
         SendEmail sender = new SendEmail();
-        //sender.send("001","01n3n5nn",'t');
+        ender.send("001","01n3n5nn",'t');
         System.out.println("Sending take email...");
         //dosage info test
         getDosageInfo dosagetest = new getDosageInfo();
-        String dosageInfotest = dosagetest.getInfo("001");
+        String dosageInfotest = dosagetest.getInfo("003");
         System.out.println(dosageInfotest);
+
+        String test = "0nnnn5nn89t0010nnnn5nn89f001";
+        System.out.println("opcodes: " + test.charAt(10)+" and " + test.charAt(24));
+
+
+        SendEmail testsender = new SendEmail();
+        testsender.send("003","0nnnnnnn",'t');
 */
         String serial_ID = "123";
         String dose = "";
@@ -43,72 +50,46 @@ public class Server {
                     String request = in.readLine();
                     System.out.println("Client request: " + request);
 
-                    if(request.equals("time")){
-                        LocalDateTime time = LocalDateTime.now();
-                        String hour = new DecimalFormat("00").format(time.getHour());
-                        String min = new DecimalFormat("00").format(time.getMinute());
-                        String sec = new DecimalFormat("00").format(time.getSecond());
-                        String time_message = hour+min+sec+'\n';
-                        System.out.println(time_message);
-                        BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-                        out.write(time_message);
-                        out.flush();
-                    }
-                    else if(request.length() > 6 && request.substring(0,6).equals("length")){
-                        BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-                        getDosageInfo dosage = new getDosageInfo();
-                        //dose = dosage.getInfo(request.substring(request.length() - 3, request.length()))+"\n";
-                        dose = "p0t1111n1t1010n1t1212n1p1t2020n2t2121n2p2t3030n3p3t1131n4t4545n5p4t5555n5t5656n6p5t6666n6t6363n6p6t7777n7t7979n7p7t8888n8t8080n8p8t9999n9t9494n9p9t0100n9t1808n9\n";
-                        String length = new DecimalFormat("000").format(dose.length())+"\n";
-                        System.out.println(length);
-                        out.write(length);
-                        out.flush();
-                    }
-                    else if((request.length() > 6 && request.substring(0,6).equals("update")) ||
+
+                    if((request.length() > 6 && request.substring(0,6).equals("update")) || //e.g: update001
                             (request.length() > 2 && request.substring(0,2).equals("fu"))) {//force update
                         BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
                         getDosageInfo dosage = new getDosageInfo();
                         dose = dosage.getInfo(request.substring(request.length() - 3, request.length()))+"\n";
-                        dose = "p0t1111n1t1010n1t1137n5p1t1135n2t2121n2p2t3030n3p3t1134n4t4545n5p4t5555n5t5656n6p5t1138n6t6363n6p6t7777n7t7979n7p7t8888n8t8080n8p8t9999n9t9494n9p9t1155n9t1147n9\n";
-                        //String length = new DecimalFormat("000").format(dose.length());
-                        //String dosageInfo = length + dose;
-                        //String dosageInfo = "p1t1111n1t1010n1t1212n1p2t2020n2t2121n2\n";
-                        //System.out.println("ID is " + request.substring(request.length() - 3, request.length()));
-                        //System.out.println("prev: "+prevInfo);
-                        //System.out.println("current: "+dosageInfo);
-                       // if(request.substring(0,2).equals("fu")){//force update
-                            System.out.println(dose);
-                            out.write(dose);
-                            out.flush();
-                        /*}
-                        else if(prevInfo.equals(dosageInfo)){//avoid sending duplicate info to increase the efficiency
-                            out.write("n");
-                            out.flush();
-                        }else{
-                            out.write(dosageInfo);
-                            out.flush();
-                            prevInfo = dosageInfo;
-                        }*/
+                        //dose = "p0t1246n4t1010n1t1155n5p1t1155n5t2121n2p2t3030n3p3t1134n4t4545n5p4t5555n5t5656n6p5t1255n6t6363n6p6t7777n7t7979n7p7t8888n8t8080n8p8t1155n6t9494n8p9t1100n9t1100n9\n";
+                        LocalDateTime time = LocalDateTime.now();
+                        String hour = new DecimalFormat("00").format(time.getHour());
+                        String min = new DecimalFormat("00").format(time.getMinute());
+                        String sec = new DecimalFormat("00").format(time.getSecond());
+                        String time_message = hour+min+sec;
+                        System.out.println(time_message+dose);
+                        out.write("144500"+dose);
+                        out.flush();
+
                     }
-                    else if (request.length() >= 10) {
-                        if ((request.charAt(10) == 't' || request.charAt(10) == 'f') && ( //format is an email request
-                                (prev == 0 || System.currentTimeMillis()-prev >= 60000) || //it has been 1 minutes since last request or
+                    else if (request.length() >= 20) { //e.g: fnnnnnnnnnnt
+                        if ((request.charAt(0) == 'f' && request.charAt(11) == 't') && ( //format is an email request
+                                (prev == 0 || System.currentTimeMillis()-prev >= 120000) || //it has been 2 minutes since last duplicate request or
                                 (prevrequest == "" || !prevrequest.equals(request)))){ //there is a new request
                             prevrequest=request; prev = System.currentTimeMillis();
                             getEmail mail = new getEmail();
-                            serial_ID = request.substring(11, 14);
+                            serial_ID = request.substring(22, 25);
                             System.out.println("serial ID is: " + serial_ID);
-                            String seg_IDs = request.substring(0, 10);
-                            System.out.println("Segmets require operations are:" + seg_IDs);
+                            String fill_IDs = request.substring(1, 11);
+
+                            String take_IDs = request.substring(12, 22);
+                            System.out.println("Segmets require operations are:" + fill_IDs + " and "+take_IDs);
+
                             String email_address = mail.get(serial_ID);
-                            if(!seg_IDs.equals("nnnnnnnnnn")){
+                            if(!take_IDs.equals("nnnnnnnnnn")){
                                 SendEmail sender = new SendEmail();
-                                sender.send(serial_ID,seg_IDs,request.charAt(10));
+                                sender.send(serial_ID, take_IDs,'t');
+                            }
+                            if(!fill_IDs.equals("nnnnnnnnnn")){
+                                SendEmail sender = new SendEmail();
+                                sender.send(serial_ID, fill_IDs,'f');
                             }
                         }
-                    }
-                    else{
-
                     }
                 } finally {
                     socket.close();

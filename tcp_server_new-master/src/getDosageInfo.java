@@ -29,48 +29,33 @@ public class getDosageInfo {
                 String index = Integer.toString(i);
                // info += index;
                 try {
-                    info += "p"; info += Integer.toString(i-1);
-
-                    String query = "SELECT time" + index + //get number of pills to take
+                    String query = "SELECT PillName" + index +
+                            " FROM sql9281675.box" + ID + ";";
+                    ResultSet result = stmt.executeQuery(query);
+                    if(!result.getString("PillName" + index).equals("") && result.getString("PillName" + index) != null) {
+                        info += "p";
+                        info += Integer.toString(i - 1);
+                    }
+                    query = "SELECT time" + index + //get number of pills to take
                             ", dos" + index + //get time to take the pill
                             " FROM sql9281675.box" + ID + ";";
                     stmt = conn.createStatement();
-                    ResultSet result = stmt.executeQuery(query);
+                    result = stmt.executeQuery(query);
                     while (result.next()) {
                         String time = result.getString("time" + index);
                         //System.out.println("time: " + time);
-                        if (time != null) {
+                        if (time != null && !time.equals("")) {
                             info += "t";
                             info += time;
                         }
                         String dos = result.getString("dos" + index);
-                        // System.out.println("dos: " + dos);
-                        if (dos != null) {
+                        //System.out.println("dos: " + dos);
+                        if (dos != null && !dos.equals("")) {
                             info += "n";
                             info += dos;
                         }
                     }
-                    /*
-                    bool empty_flag = true;
-                    while (result.next()) {
-                        String time = result.getString("time" + index);
-                        //System.out.println("time: " + time);
-                        if (time != null) {
-                            if(empty_flag = true){
-                                info += "p"; info +=  Integer.toString(i-1):
-                                empty_flag = false;
-                            }
-                            info += "t";
-                            info += time;
-                        }
-                        String dos = result.getString("dos" + index);
-                        // System.out.println("dos: " + dos);
-                        if (dos != null) {
-                            info += "n";
-                            info += dos;
-                        }
-                    }
-                     */
+
                 } catch (SQLException e) {
                     e.printStackTrace();
                 } finally {
