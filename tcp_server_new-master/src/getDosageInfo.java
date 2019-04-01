@@ -31,10 +31,14 @@ public class getDosageInfo {
                 try {
                     String query = "SELECT PillName" + index +
                             " FROM sql9281675.box" + ID + ";";
+                    //System.out.println(query);
+                    stmt = conn.createStatement();
                     ResultSet result = stmt.executeQuery(query);
-                    if(!result.getString("PillName" + index).equals("") && result.getString("PillName" + index) != null) {
-                        info += "p";
-                        info += Integer.toString(i - 1);
+                    while(result.next()) {
+                        if(result.getString("PillName" + index) != null && !result.getString("PillName" + index).equals("")) {
+                            info += "p";
+                            info += Integer.toString(i - 1);
+                        }
                     }
                     query = "SELECT time" + index + //get number of pills to take
                             ", dos" + index + //get time to take the pill

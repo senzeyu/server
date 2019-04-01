@@ -69,7 +69,7 @@ public class Server {
                     }
                     else if (request.length() >= 20) { //e.g: fnnnnnnnnnnt
                         if ((request.charAt(0) == 'f' && request.charAt(11) == 't') && ( //format is an email request
-                                (prev == 0 || System.currentTimeMillis()-prev >= 120000) || //it has been 2 minutes since last duplicate request or
+                                (prev == 0 || System.currentTimeMillis()-prev >= 240000) || //it has been 2 minutes since last duplicate request or
                                 (prevrequest == "" || !prevrequest.equals(request)))){ //there is a new request
                             prevrequest=request; prev = System.currentTimeMillis();
                             getEmail mail = new getEmail();
@@ -89,6 +89,9 @@ public class Server {
                                 SendEmail sender = new SendEmail();
                                 sender.send(serial_ID, fill_IDs,'f');
                             }
+                        }
+                        else{
+                            System.out.println("Already Sent");
                         }
                     }
                 } finally {
